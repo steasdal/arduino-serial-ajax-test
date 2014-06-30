@@ -1,10 +1,7 @@
 package com.perceptivesoftware
 
-import stomp.test.ArduinoControllerService
-
 class ControlsController {
 
-    // static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
     static allowedMethods = [save: "POST"]
     static defaultAction = "display"
 

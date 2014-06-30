@@ -1,4 +1,4 @@
-package stomp.test
+package com.perceptivesoftware
 
 import org.teasdale.api.ArduinoSerialConfig
 import org.teasdale.api.ArduinoSerialConnection

@@ -1,25 +1,15 @@
-serial.portname = "COM3"
+serial.portname = "COM4"
 serial.baudrate = 19200
 serial.databits = 8
 serial.parity = "none"
 serial.stopbits = 1
 serial.updatefrequency = 16
-serial.maxmissedupdates = 40
+serial.maxmissedupdates = 8
 
 commands {
     blink {
         name = "BLINK"
         value = 3000
-    }
-
-    motor01 {
-        name = "MTR1"
-        value = 0
-    }
-
-    motor02 {
-        name = "MTR2"
-        value = 0
     }
 
     servo01 {

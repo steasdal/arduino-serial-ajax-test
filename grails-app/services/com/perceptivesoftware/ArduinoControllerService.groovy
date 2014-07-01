@@ -11,18 +11,19 @@ class ArduinoControllerService {
     static ArduinoSerialConnection arduinoSerialConnection
 
     private static void doConfig() {
+
         if( !arduinoSerialConfig ) {
-            arduinoSerialConfig = ArduinoSerialFactory.getInstance().getArduinoSerialConfig()
 
-            arduinoSerialConfig.setBaudrate(ArduinoSerialConfig.Baudrate.BAUDRATE_19200)
-            arduinoSerialConfig.setPortname("COM4")
-            arduinoSerialConfig.setUpdateFrequency(20)       // twenty updates per second
-            arduinoSerialConfig.setMissedUpdatesAllowed(20)  // one second's worth
 
-            arduinoSerialConfig.registerCommand("BLINK", 3000)
-            arduinoSerialConfig.registerCommand("SRV1", 90)
-            arduinoSerialConfig.registerCommand("SRV2", 90)
+            // Read the ArduinoSerialConfig.txt file in the /conf directory to an InputStream
+            InputStream configStream = Thread.currentThread().contextClassLoader.getResourceAsStream("ArduinoSerialConfig.txt")
 
+            // Pass the InputStream representing the config file to the getArduinoSerialConfig
+            // method which will return an ArduinoSerialConfig instance configured according
+            // to the config file settings.
+            arduinoSerialConfig = ArduinoSerialFactory.getInstance().getArduinoSerialConfig(configStream)
+
+            // Register the embedded SerialListener class to receive incoming serial message strings.
             arduinoSerialConfig.registerListener(new SerialListener())
         }
     }

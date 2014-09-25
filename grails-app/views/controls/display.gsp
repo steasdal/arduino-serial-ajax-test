@@ -4,49 +4,77 @@
     <meta name="layout" content="main">
     <title>Controls</title>
 
+    <asset:javascript src="jquery" />
+    <asset:javascript src="spring-websocket" />
     <jqui:resources/>
 
-    <script>
-        $(document).ready(function(){
+    <script type="text/javascript">
+        $(function() {
 
+            var socket = new SockJS("${createLink(uri: '/stomp')}");
+            var client = Stomp.over(socket);
+
+            client.connect({}, function() {
+                client.subscribe("/topic/blink", function(message) {
+                   var interval = parseInt(JSON.parse(message.body));
+
+                    $("#blink-slider").slider('value', interval);
+                    $("#slidervalue").val(interval);
+                });
+
+                client.subscribe("/topic/servo01", function(message) {
+                    var position = parseInt(JSON.parse(message.body));
+
+                    $("#servo01-slider").slider('value', position);
+                    $("#servo01value").val(position);
+                });
+
+                client.subscribe("/topic/servo02", function(message) {
+                    var position = parseInt(JSON.parse(message.body));
+
+                    $("#servo02-slider").slider('value', position);
+                    $("#servo02value").val(position);
+                });
+            });
+
+            $("#slidervalue").val(250);
             $("#blink-slider").slider({
                 value:250,
                 min: 10,
                 max: 2000,
+                animate: true,
                 slide: function( event, ui ) {
                     var slideval = ui.value;
                     $("#slidervalue").val(ui.value);
-                    <g:remoteFunction action="setBlink" params="{value:slideval}"/>
-                }
-            });
-
-            $("#slidervalue").val(250);
-
-            $("#servo01-slider").slider({
-                value:90,
-                min: 0,
-                max: 180,
-                slide: function( event, ui ) {
-                    var slideval = ui.value;
-                    $("#servo01value").val(ui.value);
-                    <g:remoteFunction action="setServo01" params="{value:slideval}"/>
+                    client.send("/app/blink", {}, JSON.stringify(slideval));
                 }
             });
 
             $("#servo01value").val(90);
-
-            $("#servo02-slider").slider({
+            $("#servo01-slider").slider({
                 value:90,
                 min: 0,
                 max: 180,
+                animate: true,
                 slide: function( event, ui ) {
                     var slideval = ui.value;
-                    $("#servo02value").val(ui.value);
-                    <g:remoteFunction action="setServo02" params="{value:slideval}"/>
+                    $("#servo01value").val(ui.value);
+                    client.send("/app/servo01", {}, JSON.stringify(slideval));
                 }
             });
 
             $("#servo02value").val(90);
+            $("#servo02-slider").slider({
+                value:90,
+                min: 0,
+                max: 180,
+                animate: true,
+                slide: function( event, ui ) {
+                    var slideval = ui.value;
+                    $("#servo02value").val(ui.value);
+                    client.send("/app/servo02", {}, JSON.stringify(slideval));
+                }
+            });
 
         });
     </script>

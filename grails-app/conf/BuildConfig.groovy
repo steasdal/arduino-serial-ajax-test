@@ -31,6 +31,9 @@ System.properties.putAll(
         ]
 )
 
+grails.tomcat.nio = true
+grails.tomcat.scan.enabled = true
+
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {
@@ -71,13 +74,14 @@ grails.project.dependency.resolution = {
         build ":tomcat:7.0.54"
 
         // plugins for the compile step
-        compile ":scaffolding:2.1.1"
-        compile ':cache:1.1.6'
-        compile ":asset-pipeline:1.8.11"
-        compile ":jquery-ui:1.10.3"
+        compile ":scaffolding:2.1.2"
+        compile ':cache:1.1.7'
+        compile ":asset-pipeline:1.9.6"
+        compile ":jquery-ui:1.10.4"
+        compile ":spring-websocket:1.1.0"
 
         // plugins needed at runtime but not for compilation
-        runtime ":hibernate4:4.3.5.4" // or ":hibernate:3.6.10.16"
+        runtime ":hibernate4:4.3.5.5" // or ":hibernate:3.6.10.16"
         runtime ":database-migration:1.4.0"
         runtime ":jquery:1.11.1"
 

@@ -1,5 +1,8 @@
 package com.perceptivesoftware
 
+import org.springframework.messaging.handler.annotation.MessageMapping
+import org.springframework.messaging.handler.annotation.SendTo
+
 class ControlsController {
 
     static allowedMethods = [save: "POST"]
@@ -12,27 +15,24 @@ class ControlsController {
         arduinoControllerService.open()
     }
 
-    def setBlink() {
-        if( params?.value ) {
-            arduinoControllerService.updateBlink( Integer.parseInt( params?.value?.toString() ) )
-        }
-
-        render status: 200
+    @MessageMapping("/blink")
+    @SendTo("/topic/blink")
+    protected String wsSetBlink(String interval) {
+        arduinoControllerService.updateBlink( Integer.parseInt(interval) )
+        return interval
     }
 
-    def setServo01() {
-        if( params?.value ) {
-            arduinoControllerService.updateServo1( Integer.parseInt( params?.value?.toString() ) )
-        }
-
-        render status: 200
+    @MessageMapping("/servo01")
+    @SendTo("/topic/servo01")
+    protected String wsSetServo01(String position) {
+        arduinoControllerService.updateServo1( Integer.parseInt(position) )
+        return position
     }
 
-    def setServo02() {
-        if( params?.value ) {
-            arduinoControllerService.updateServo2( Integer.parseInt( params?.value?.toString() ) )
-        }
-
-        render status: 200
+    @MessageMapping("/servo02")
+    @SendTo("/topic/servo02")
+    protected String wsSetServo02(String position) {
+        arduinoControllerService.updateServo2( Integer.parseInt(position) )
+        return position
     }
 }

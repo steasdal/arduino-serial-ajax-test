@@ -14,22 +14,24 @@
             var socket = new SockJS("${createLink(uri: '/stomp')}");
             var client = Stomp.over(socket);
 
+            var blinkSubscription, servo01Subscription, servo02Subscription;
+
             client.connect({}, function() {
-                client.subscribe("/topic/blink", function(message) {
+                blinkSubscription = client.subscribe("/topic/blink", function(message) {
                    var interval = parseInt(JSON.parse(message.body));
 
                     $("#blink-slider").slider('value', interval);
                     $("#slidervalue").val(interval);
                 });
 
-                client.subscribe("/topic/servo01", function(message) {
+                servo01Subscription = client.subscribe("/topic/servo01", function(message) {
                     var position = parseInt(JSON.parse(message.body));
 
                     $("#servo01-slider").slider('value', position);
                     $("#servo01value").val(position);
                 });
 
-                client.subscribe("/topic/servo02", function(message) {
+                servo02Subscription = client.subscribe("/topic/servo02", function(message) {
                     var position = parseInt(JSON.parse(message.body));
 
                     $("#servo02-slider").slider('value', position);
@@ -76,6 +78,14 @@
                 }
             });
 
+            $(window).on('beforeunload', function(){
+                blinkSubscription.unsubscribe();
+                servo01Subscription.unsubscribe();
+                servo02Subscription.unsubscribe();
+
+                // Disconnect the websocket connection
+                client.disconnect();
+            });
         });
     </script>
 </head>
